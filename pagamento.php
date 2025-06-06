@@ -9,7 +9,7 @@ header('Access-Control-Allow-Origin: *');
 
 // Configurações
 $secretKey = "sk_C0R88yLSQUOfD5iv10GP6UwlFLM20ZxLh12dr8Su228jo9bk";
-$apiUrl = "https://api.blackcatpagamentos.com/v1/transactions";
+$apiUrl = "https://api.podpay.pro/v1/transactions";
 
 // Array para armazenar logs
 $logs = [];
