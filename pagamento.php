@@ -1,30 +1,30 @@
 <?php
+// pagamento.php - Compatível com Ghostspay + seu index atual
+
 header('Content-Type: application/json');
 
-// Chave da Ghostspay
 $secretKey = '8569651b-9145-46b5-9173-a3498274c017';
 $url = 'https://app.ghostspaysv1.com/api/v1/transaction.purchase';
 
-// Dados fixos válidos
-$data = [
-  "name" => "Maria de Souza",
-  "email" => "teste@teste.com",
-  "cpf" => "12345678909", // CPF válido sintético
-  "phone" => "11999999999",
-  "paymentMethod" => "PIX",
-  "amount" => 6783, // R$ 67,83
-  "traceable" => true,
-  "items" => [
-    [
-      "unitPrice" => 6783,
-      "title" => "Exame Admissional",
-      "quantity" => 1,
-      "tangible" => false
-    ]
-  ]
-];
-
 try {
+  $data = [
+    "name" => "Usuário PIX",
+    "email" => "email@exemplo.com",
+    "cpf" => "12345678909",
+    "phone" => "11999999999",
+    "paymentMethod" => "PIX",
+    "amount" => 6783,
+    "traceable" => true,
+    "items" => [
+      [
+        "unitPrice" => 6783,
+        "title" => "Exame Admissional",
+        "quantity" => 1,
+        "tangible" => false
+      ]
+    ]
+  ];
+
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
@@ -40,7 +40,8 @@ try {
   curl_close($ch);
 
   if ($httpCode >= 400 || !$response) {
-    throw new Exception("Erro HTTP $httpCode: $error\nResposta: $response");
+    echo json_encode(["success" => false, "message" => "Erro HTTP $httpCode", "raw" => $response]);
+    exit;
   }
 
   $json = json_decode($response, true);
