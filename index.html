@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pagamento com PIX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
+    form { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+    input, button { width: 100%; padding: 10px; margin-bottom: 10px; }
+    img { max-width: 100%; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align:center;">Pagamento via PIX</h2>
+
+  <form id="pixForm">
+    <input name="name" placeholder="Nome Completo" required>
+    <input name="email" type="email" placeholder="E-mail" required>
+    <input name="cpf" placeholder="CPF (somente números)" required>
+    <input name="phone" placeholder="Telefone com DDD" required>
+    <button type="submit">Gerar PIX</button>
+  </form>
+
+  <div id="pixResult" style="text-align:center; display:none;">
+    <h3>Escaneie o QR Code abaixo:</h3>
+    <img id="pixQrCode" src="" alt="QR Code PIX" />
+    <p>Código PIX (copia e cola):</p>
+    <textarea id="pixCode" rows="4" style="width:100%;"></textarea>
+  </div>
+
+  <script>
+    document.getElementById('pixForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch('pagamento.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.pixQrCode && data.pixCode) {
+          document.getElementById('pixQrCode').src = data.pixQrCode;
+          document.getElementById('pixCode').value = data.pixCode;
+          document.getElementById('pixResult').style.display = 'block';
+        } else {
+          alert('Erro: ' + JSON.stringify(data));
+        }
+      })
+      .catch(err => alert('Erro ao processar pagamento: ' + err));
+    });
+  </script>
+
+</body>
+</html>
