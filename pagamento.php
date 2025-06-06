@@ -1,30 +1,30 @@
 <?php
-// pagamentonj.php
-
 header('Content-Type: application/json');
 
+// Chave da Ghostspay
 $secretKey = '8569651b-9145-46b5-9173-a3498274c017';
 $url = 'https://app.ghostspaysv1.com/api/v1/transaction.purchase';
 
-try {
-  $data = [
-    "name" => "Usuário PIX",
-    "email" => "email@exemplo.com",
-    "cpf" => "12345678901",
-    "phone" => "11999999999",
-    "paymentMethod" => "PIX",
-    "amount" => 6783, // R$ 67,83
-    "traceable" => true,
-    "items" => [
-      [
-        "unitPrice" => 6783,
-        "title" => "Exame Admissional",
-        "quantity" => 1,
-        "tangible" => false
-      ]
+// Dados fixos válidos
+$data = [
+  "name" => "Maria de Souza",
+  "email" => "teste@teste.com",
+  "cpf" => "12345678909", // CPF válido sintético
+  "phone" => "11999999999",
+  "paymentMethod" => "PIX",
+  "amount" => 6783, // R$ 67,83
+  "traceable" => true,
+  "items" => [
+    [
+      "unitPrice" => 6783,
+      "title" => "Exame Admissional",
+      "quantity" => 1,
+      "tangible" => false
     ]
-  ];
+  ]
+];
 
+try {
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
