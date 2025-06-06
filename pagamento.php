@@ -1,5 +1,5 @@
 <?php
-// pagamento.php
+// pagamentonj.php
 
 header('Content-Type: application/json');
 
