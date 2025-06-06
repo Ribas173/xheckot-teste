@@ -1,28 +1,24 @@
 <?php
 // pagamento.php
 
+header('Content-Type: application/json');
+
 $secretKey = '8569651b-9145-46b5-9173-a3498274c017';
 $url = 'https://app.ghostspaysv1.com/api/v1/transaction.purchase';
 
-header('Content-Type: application/json');
-
 try {
-  if (!isset($_POST['name'], $_POST['email'], $_POST['cpf'], $_POST['phone'])) {
-    throw new Exception("Campos obrigatórios ausentes.");
-  }
-
   $data = [
-    "name" => $_POST['name'],
-    "email" => $_POST['email'],
-    "cpf" => $_POST['cpf'],
-    "phone" => $_POST['phone'],
+    "name" => "Usuário PIX",
+    "email" => "email@exemplo.com",
+    "cpf" => "12345678901",
+    "phone" => "11999999999",
     "paymentMethod" => "PIX",
-    "amount" => 10000,
+    "amount" => 6783, // R$ 67,83
     "traceable" => true,
     "items" => [
       [
-        "unitPrice" => 10000,
-        "title" => "Checkout Teste",
+        "unitPrice" => 6783,
+        "title" => "Exame Admissional",
         "quantity" => 1,
         "tangible" => false
       ]
@@ -47,9 +43,17 @@ try {
     throw new Exception("Erro HTTP $httpCode: $error\nResposta: $response");
   }
 
-  echo $response;
+  $json = json_decode($response, true);
 
+  echo json_encode([
+    "success" => true,
+    "id" => $json['id'] ?? null,
+    "qrCodeUrl" => $json['pixQrCode'] ?? null,
+    "pixCopiaECola" => $json['pixCode'] ?? null,
+    "status" => $json['status'] ?? null,
+    "valor" => 6783
+  ]);
 } catch (Exception $e) {
-  echo json_encode(["erro" => $e->getMessage()]);
+  echo json_encode(["success" => false, "message" => $e->getMessage()]);
 }
 ?>
